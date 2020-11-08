@@ -13,7 +13,7 @@ os.environ["CUDA_VISIBLE_DEVICES"] = ""
 
 model = keras.models.load_model('1/9.hdf5')
 
-print(model.evaluate(X_train, y_train))
+# print(model.evaluate(X_train, y_train))
 
 y_test = model.predict_classes(X_test)
 pred = pd.DataFrame({
