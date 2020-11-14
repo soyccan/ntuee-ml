@@ -6,6 +6,7 @@ import sys
 import numpy as np
 import pandas as pd
 from tensorflow import keras
+from PIL import Image
 
 test_path = sys.argv[1]
 pred_path = sys.argv[2]
