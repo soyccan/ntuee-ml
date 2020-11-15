@@ -25,7 +25,7 @@ print('y_train', y_train.shape, '\n', y_train)
 print('X_train', X_train.shape)
 
 # set GPU to use
-os.environ["CUDA_VISIBLE_DEVICES"] = ""
+#  os.environ["CUDA_VISIBLE_DEVICES"] = "0"
 
 tf.config.threading.set_inter_op_parallelism_threads(1)
 tf.config.threading.set_intra_op_parallelism_threads(4)
