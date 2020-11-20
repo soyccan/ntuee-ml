@@ -1,0 +1,17 @@
+{
+  "id": "b07902143/ml-proj",
+  "id_no": 12974931,
+  "title": "ml-proj",
+  "code_file": "ml-proj.py",
+  "language": "python",
+  "kernel_type": "script",
+  "is_private": true,
+  "enable_gpu": false,
+  "enable_internet": false,
+  "keywords": [],
+  "dataset_sources": [],
+  "kernel_sources": [],
+  "competition_sources": [
+    "severstal-steel-defect-detection"
+  ]
+}
