@@ -116,7 +116,7 @@ def training(batch_size, n_epoch, lr, model_dir,
     criterion = BCELoss()
     t_batch = len(train_loader)
     v_batch = len(valid_loader)
-    optimizer = Adam(model.parameters(), lr=lr)
+    optimizer = Adam(model.parameters(), lr=lr, weight_decay=1e-3)
     total_loss, total_acc, best_acc = 0, 0, 0
     for epoch in range(n_epoch):
         # training
@@ -165,10 +165,11 @@ def training(batch_size, n_epoch, lr, model_dir,
         model.train()
 
 def bag_of_words(corpus):
-    if os.path.exists('../work/bow.pkl'):
-        return joblib.load('../work/bow.pkl')
+    # if os.path.exists('../work/bow.pkl'):
+    #     return joblib.load('../work/bow.pkl')
     vectorizer = CountVectorizer()
     word_vectors = vectorizer.fit_transform(corpus)
+    joblib.dump(vectorizer, 'bow.pkl')
     print('Features: \n', vectorizer.get_feature_names())
     return word_vectors  # sparse matrix
 
@@ -203,7 +204,7 @@ def main():
     train_dataset = SparseDataset(X=X_train, y=y_train)
     val_dataset = SparseDataset(X=X_val, y=y_val)
 
-    batch_size = 128
+    batch_size = 256
     train_loader = FastTensorDataLoader(dataset=train_dataset,
                                         batch_size=batch_size,
                                         shuffle=False,
@@ -215,7 +216,7 @@ def main():
                                              num_workers=8)
 
     model = BowModel(input_dim=X_train.shape[1],
-                     hidden_dim=(512, 512, 512, 512), num_layers=0, dropout=0.25)
+                     hidden_dim=(128, 128, 128, 128), num_layers=0, dropout=0.5)
     model = model.to(device)
 
     training(batch_size=batch_size, n_epoch=100, lr=1e-3,

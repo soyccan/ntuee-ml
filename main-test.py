@@ -7,7 +7,6 @@ from torch import nn
 from gensim.models import word2vec
 from sklearn.model_selection import train_test_split
 
-from rnn.common import *
 from rnn.preprocess import *
 from rnn.data import *
 from rnn.test import *
@@ -21,14 +20,14 @@ os.environ["CUDA_VISIBLE_DEVICES"] = "2"
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
 # 處理好各個 data 的路徑
+path_prefix = 'work'
+model_dir = os.path.join(path_prefix, 'model/')
 testing_data = os.path.join(path_prefix, 'testing_data.txt')
-
-w2v_path = os.path.join(path_prefix, 'w2v_all.model') # 處理 word to vec model 的路徑
+w2v_path = os.path.join(model_dir, 'w2v-dim300.model') # 處理 word to vec model 的路徑
 
 # 定義句子長度、要不要固定 embedding、batch 大小、要訓練幾個 epoch、learning rate 的值、model 的資料夾路徑
-sen_len = 15
+sen_len = 45
 batch_size = 128
-model_dir = os.path.join(path_prefix, 'model/') # model directory for checkpoint model
 
 print("loading data ...") # 把 'training_label.txt' 跟 'training_nolabel.txt' 讀進來
 test_x = load_testing_data(testing_data)
@@ -39,7 +38,7 @@ embedding = preprocess.make_embedding(load=True)
 test_x = preprocess.sentence_word2idx()
 
 # 製作一個 model 的對象
-model = torch.load(os.path.join(model_dir, 'word2vec-0.77.model'))
+model = torch.load(os.path.join(model_dir, 'word2vec-0.82560.model'))
 model = model.to(device) # device為 "cuda"，model 使用 GPU 來訓練（餵進去的 inputs 也需要是 cuda tensor）
 
 # 把 data 轉成 batch of tensors

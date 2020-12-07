@@ -14,7 +14,10 @@ class LSTM_Net(nn.Module):
         self.hidden_dim = hidden_dim
         self.num_layers = num_layers
         self.dropout = dropout
-        self.lstm = nn.LSTM(embedding_dim, hidden_dim, num_layers=num_layers, batch_first=True)
+        self.lstm = nn.LSTM(embedding_dim,
+                            hidden_dim,
+                            num_layers=num_layers,
+                            batch_first=True)
         self.classifier = nn.Sequential( nn.Dropout(dropout),
                                          nn.Linear(hidden_dim, 1),
                                          nn.Sigmoid() )

@@ -284,7 +284,7 @@ class LSTM_Net(nn.Module):
 
 """
 
-# train.py
+# bow_train.py
 # 這個 block 是用來訓練模型的
 import torch
 from torch import nn
