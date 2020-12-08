@@ -1,16 +1,10 @@
 # main.py
 import os
+import sys
 import torch
-import argparse
-import numpy as np
-from torch import nn
-from gensim.models import word2vec
-from sklearn.model_selection import train_test_split
 
 from rnn.preprocess import *
-from rnn.data import *
 from rnn.test import *
-from rnn.model import *
 from w2v import *
 
 # set GPU to use
@@ -20,10 +14,8 @@ os.environ["CUDA_VISIBLE_DEVICES"] = "2"
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
 # 處理好各個 data 的路徑
-path_prefix = 'work'
-model_dir = os.path.join(path_prefix, 'model/')
-testing_data = os.path.join(path_prefix, 'testing_data.txt')
-w2v_path = os.path.join(model_dir, 'w2v-dim300.model') # 處理 word to vec model 的路徑
+testing_data = sys.argv[1]
+w2v_path = 'model/w2v-dim300.model' # 處理 word to vec model 的路徑
 
 # 定義句子長度、要不要固定 embedding、batch 大小、要訓練幾個 epoch、learning rate 的值、model 的資料夾路徑
 sen_len = 45
@@ -38,7 +30,7 @@ embedding = preprocess.make_embedding(load=True)
 test_x = preprocess.sentence_word2idx()
 
 # 製作一個 model 的對象
-model = torch.load(os.path.join(model_dir, 'word2vec-0.82560.model'))
+model = torch.load('model/word2vec-0.82560.model')
 model = model.to(device) # device為 "cuda"，model 使用 GPU 來訓練（餵進去的 inputs 也需要是 cuda tensor）
 
 # 把 data 轉成 batch of tensors
@@ -51,4 +43,4 @@ pred = testing(batch_size, test_loader, model, device)
 pd.DataFrame({
     'id': np.arange(len(pred)),
     'label': pred
-}).to_csv('submission.csv', index=False)
+}).to_csv(sys.argv[2], index=False)

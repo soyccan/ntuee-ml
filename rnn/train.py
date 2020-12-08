@@ -8,7 +8,7 @@ import torch.nn.functional as F
 from .util import *
 
 
-def training(batch_size, n_epoch, lr, model_dir, train, valid, model, device):
+def training(batch_size, n_epoch, lr, train, valid, model, device):
     total = sum(p.numel() for p in model.parameters())
     trainable = sum(p.numel() for p in model.parameters() if p.requires_grad)
     print('\nstart training, parameter total:{}, trainable:{}\n'.format(
@@ -85,12 +85,12 @@ def training(batch_size, n_epoch, lr, model_dir, train, valid, model, device):
             best_acc = total_acc
             #torch.save(model, "{}/val_acc_{:.3f}.model".format(
             # model_dir,total_acc/v_batch*100))
-            torch.save(model, "{}/ckpt.model".format(model_dir))
+            torch.save(model, "ckpt.model")
             print('saving model with acc {:.3f}'.format(
                     total_acc/v_batch*100))
         train_history['val_loss'].append(total_loss/v_batch)
         train_history['val_acc'].append(total_acc/v_batch*100)
-        pd.DataFrame(train_history).to_csv('work/train_history.csv', index=False)
+        pd.DataFrame(train_history).to_csv('train_history.csv', index=False)
         print('-----------------------------------------------')
         # 將 model 的模式設為 train，這樣 optimizer 就可以更新 model 的參數
         # （因為剛剛轉成 eval 模式）

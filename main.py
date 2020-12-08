@@ -1,5 +1,6 @@
 # main.py
 import os
+import sys
 import torch
 import argparse
 import numpy as np
@@ -21,23 +22,22 @@ os.environ["CUDA_VISIBLE_DEVICES"] = "0"
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
 # 處理好各個 data 的路徑
-train_with_label = os.path.join(path_prefix, 'training_label.txt')
-train_no_label = os.path.join(path_prefix, 'training_nolabel.txt')
-testing_data = os.path.join(path_prefix, 'testing_data.txt')
+train_with_label = sys.argv[1]
+train_no_label = sys.argv[2]
 
-w2v_path = os.path.join(path_prefix, 'model/w2v-dim300.model') # 處理 word to vec model 的路徑
+w2v_path = 'model/w2v-dim300.model' # 處理 word to vec model 的路徑
 
 # 定義句子長度、要不要固定 embedding、batch 大小、要訓練幾個 epoch、learning rate 的值、model 的資料夾路徑
 sen_len = 45
-fix_embedding = True # fix embedding during training
+fix_embedding = True  # fix embedding during training
 batch_size = 256
 epoch = 100
 lr = 0.001
-model_dir = path_prefix # model directory for checkpoint model
+model_dir = 'model'  # model directory for checkpoint model
 
 print("loading data ...") # 把 'training_label.txt' 跟 'training_nolabel.txt' 讀進來
 train_x, y = load_training_data(train_with_label)
-print('train_x',train_x[:10])
+print('train_x', train_x[:10])
 # train_x_no_label = load_training_data(train_no_label)
 
 # 對 input 跟 labels 做預處理
@@ -55,7 +55,7 @@ y = preprocess.labels_to_tensor(y)
 # 製作一個 model 的對象
 model = LSTM_Net(embedding, embedding_dim=300, hidden_dim=64, num_layers=4,
                  dropout=0.75, fix_embedding=fix_embedding)
-model = torch.nn.DataParallel(model) # Multi-GPU
+# model = torch.nn.DataParallel(model) # Multi-GPU
 model = model.to(device) # device為 "cuda"，model 使用 GPU 來訓練（餵進去的 inputs 也需要是 cuda tensor）
 
 # 把 data 分為 training data 跟 validation data（將一部份 training data 拿去當作 validation data）
@@ -85,4 +85,4 @@ val_loader = torch.utils.data.DataLoader(dataset = val_dataset,
 #################
 
 # 開始訓練
-training(batch_size, epoch, lr, model_dir, train_loader, val_loader, model, device)
+training(batch_size, epoch, lr, train_loader, val_loader, model, device)
