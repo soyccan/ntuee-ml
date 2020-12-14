@@ -29,6 +29,7 @@ If you want to skip the **training** phase, please refer to the **clustering** s
 # !mkdir checkpoints
 # !ls
 
+from common import *
 import os
 os.makedirs('checkpoints', exist_ok=True)
 
@@ -40,7 +41,8 @@ os.makedirs('checkpoints', exist_ok=True)
 from torch.utils.data import DataLoader
 from sklearn.model_selection import train_test_split
 import numpy as np
-from common import *
+from junk_cluster.preprocess import *
+from junk_cluster.dataset import *
 
 trainX = np.load('trainX.npy')
 trainX = preprocess(trainX)
@@ -57,11 +59,10 @@ valid_dataset = Image_Dataset(validX)
 訓練完成後，我們會將 model 存下來。
 """
 
-import torch
-import torch.optim
 import torch.nn
-import os
 import numpy as np
+from junk_cluster.model import *
+from junk_cluster.util import *
 
 same_seeds(0)
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")

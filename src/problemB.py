@@ -9,8 +9,9 @@ import torch
 import numpy as np
 from common import *
 
-model = AE()
-model.load_state_dict(MODEL_PATH)
+# model = AE()
+# model.load_state_dict(MODEL_PATH)
+model = torch.load(MODEL_PATH)
 
 trainX = np.load('trainX.npy')
 trainX_preprocessed = preprocess(trainX)
@@ -35,3 +36,4 @@ for i, img in enumerate(recs):
     plt.imshow(img)
 
 plt.tight_layout()
+plt.show()
