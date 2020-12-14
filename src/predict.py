@@ -9,37 +9,21 @@
 
 import os
 import torch
-from torch.utils.data import DataLoader
 import numpy as np
 from sklearn.decomposition import KernelPCA
 from sklearn.manifold import TSNE
 from sklearn.cluster import MiniBatchKMeans
 from common import *
 
-def inference(X, model, batch_size=256):
-    X = preprocess(X)
-    dataset = Image_Dataset(X)
-    dataloader = DataLoader(dataset, batch_size=batch_size, shuffle=False)
-    latents = []
-    for i, x in enumerate(dataloader):
-        x = torch.FloatTensor(x)
-        vec, img = model(x.cuda())
-        vec = vec.view(img.size()[0], -1).cpu().detach().numpy()
-        if i == 0:
-            latents = vec
-        else:
-            latents = np.concatenate((latents, vec), axis=0)
-    print('Latents Shape:', latents.shape)
-    return latents
 
 def predict(latents):
     # First Dimension Reduction
-    transformer = KernelPCA(n_components=200, kernel='rbf', n_jobs=8)
+    transformer = KernelPCA(n_components=200, kernel='rbf', n_jobs=16)
     kpca = transformer.fit_transform(latents)
     print('First Reduction Shape:', kpca.shape)
 
     # Second Dimesnion Reduction
-    X_embedded = TSNE(n_components=2).fit_transform(kpca)
+    X_embedded = TSNE(n_components=2, n_jobs=16).fit_transform(kpca)
     print('Second Reduction Shape:', X_embedded.shape)
 
     # Clustering
@@ -59,15 +43,11 @@ def save_prediction(pred, out_csv='prediction.csv'):
     print(f'Save prediction to {out_csv}.')
 
 
-os.environ["CUDA_VISIBLE_DEVICES"] = "0"
-os.environ['PYTHONPATH'] = os.environ['PYTHONPATH'] + ':' + os.path.dirname(__file__) \
-                           if os.environ.get('PYTHONPATH') \
-                           else os.path.dirname(__file__)
-
 # load model
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
-model = AE().to(device)
-model.load_state_dict(torch.load(MODEL_PATH))
+# model = AE().to(device)
+# model.load_state_dict(torch.load(MODEL_PATH))
+model = torch.load(MODEL_PATH).to(device)
 model.eval()
 
 # 準備 data

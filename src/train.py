@@ -31,10 +31,6 @@ If you want to skip the **training** phase, please refer to the **clustering** s
 
 import os
 os.makedirs('checkpoints', exist_ok=True)
-os.environ["CUDA_VISIBLE_DEVICES"] = "0"
-os.environ['PYTHONPATH'] = os.environ['PYTHONPATH'] + ':' + os.path.dirname(__file__) \
-                           if os.environ.get('PYTHONPATH') \
-                           else os.path.dirname(__file__)
 
 
 """將訓練資料讀入，並且 preprocess。
@@ -73,7 +69,7 @@ device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 model = AE().to(device)
 print(model)
 criterion = torch.nn.MSELoss()
-optimizer = torch.optim.Adam(model.parameters(), lr=1e-5, weight_decay=1e-5)
+optimizer = torch.optim.Adam(model.parameters(), lr=1e-3, weight_decay=1e-7)
 
 # 準備 dataloader, model, loss criterion 和 optimizer
 train_dataloader = DataLoader(train_dataset, batch_size=128, shuffle=True)
@@ -95,9 +91,9 @@ for epoch in range(n_epoch):
         optimizer.zero_grad()
         loss.backward()
         optimizer.step()
-        if (epoch+1) % 10 == 0:
-            torch.save(model.state_dict(),
-                       './checkpoints/checkpoint_{}.pth'.format(epoch+1))
+        # if (epoch+1) % 10 == 0:
+        #     torch.save(model.state_dict(),
+        #                './checkpoints/checkpoint_{}.pth'.format(epoch+1))
         epoch_loss.append(loss.item())
     epoch_loss = np.mean(epoch_loss)
 
@@ -111,6 +107,5 @@ for epoch in range(n_epoch):
     if valid_loss < best_valid_loss:
         print('Saving valid loss {}'.format(valid_loss))
         best_valid_loss = valid_loss
-        torch.save(model.state_dict(), './checkpoints/best.pth')
+        torch.save(model, './checkpoints/best.pth')
 
-print(model.parameters())
