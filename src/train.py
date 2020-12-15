@@ -60,6 +60,7 @@ valid_dataset = Image_Dataset(validX)
 """
 
 import torch.nn
+from torch.autograd import Variable
 import numpy as np
 from junk_cluster.model import *
 from junk_cluster.util import *
@@ -70,7 +71,7 @@ device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 model = AE().to(device)
 print(model)
 criterion = torch.nn.MSELoss()
-optimizer = torch.optim.Adam(model.parameters(), lr=1e-3, weight_decay=1e-7)
+optimizer = torch.optim.Adam(model.parameters(), lr=1e-3, weight_decay=1e-9)
 
 # 準備 dataloader, model, loss criterion 和 optimizer
 train_dataloader = DataLoader(train_dataset, batch_size=128, shuffle=True)
@@ -87,9 +88,12 @@ for epoch in range(n_epoch):
         img = data.to(device)
 
         output1, output = model(img)
-        l1reg = torch.mean(torch.tensor(
-                [torch.norm(param, 1) for param in model.parameters()]))
-        loss = criterion(output, img) + 1e-5 * l1reg
+        # l1reg = Variable(torch.FloatTensor(1), requires_grad=True).to(device)
+        # l1cnt = 0
+        # for param in model.parameters():
+        #     l1reg = l1reg + torch.norm(param, 1)
+        #     l1cnt += 1
+        loss = criterion(output, img) #+ 0e-7 * l1reg / l1cnt
 
         optimizer.zero_grad()
         loss.backward()
@@ -112,3 +116,5 @@ for epoch in range(n_epoch):
         best_valid_loss = valid_loss
         torch.save(model, './checkpoints/best.pth')
 
+import joblib
+joblib.dump(train_history, 'train_history.jlb')

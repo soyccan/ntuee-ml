@@ -33,8 +33,11 @@ def save_prediction(pred, out_csv='prediction.csv'):
     print(f'Save prediction to {out_csv}.')
 
 
+same_seeds(0)
+
 # load model
-model = torch.load(MODEL_PATH).cpu()
+# model = torch.load('../model/0.82888.pth')  #, map_location='cpu')
+model = torch.load(MODEL_PATH)
 model.eval()
 
 # 準備 data
@@ -43,8 +46,8 @@ trainY = np.load('trainY.npy')
 
 # 預測答案
 latents = inference(X=trainX, model=model)
-X_embedded = reduce_dim_pca(latents, n_jobs=16)  # TODO: remove n_jobs on production
-pred = predict(latents)
+X_embedded = reduce_dim(latents)
+pred = predict(X_embedded)
 
 # Problem c (作圖) 將 train data 的降維結果 (embedding) 與他們對應的 label 畫出來。
 acc_latent = cal_acc(trainY, pred)

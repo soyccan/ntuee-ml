@@ -13,7 +13,7 @@ import numpy as np
 from common import *
 
 # load model
-model = torch.load(MODEL_PATH).cpu()
+model = torch.load(MODEL_PATH)
 model.eval()
 
 # load data
@@ -29,11 +29,12 @@ train_dataloader = DataLoader(train_dataset, batch_size=128, shuffle=False)
 criterion = torch.nn.MSELoss()
 total_loss = []
 for i, img in enumerate(train_dataloader):
+    img = img.cuda()
     vec, img1 = model(img)
     total_loss.append(criterion(img1, img).item())
 print('Reconstruction Loss:', np.mean(total_loss))
 for i in range(100):
     img = torch.tensor(trainX[i:i+1])
-    vec, img1 = model(img)
-    img1 = postprocess(img1.detach().numpy())
+    vec, img1 = model(img.cuda())
+    img1 = postprocess(img1.cpu().detach().numpy())
     Image.fromarray(img1[0], 'RGB').save('reconstruct/{}.png'.format(i))

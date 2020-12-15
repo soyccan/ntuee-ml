@@ -21,39 +21,17 @@ from sklearn.decomposition import KernelPCA
 from sklearn.manifold import TSNE, SpectralEmbedding, LocallyLinearEmbedding
 
 
-def reduce_dim_pca(latents, **kwargs):
-    # First Dimension Reduction
-    transformer = KernelPCA(n_components=200, kernel='rbf', n_jobs=4)
-    kpca = transformer.fit_transform(latents)
-    print('First Reduction Shape:', kpca.shape)
+def reduce_dim(latents):
+    # First dimension reduction
+    transformer = KernelPCA(n_components=128, n_jobs=16, kernel='rbf')
+    # transformer = LocallyLinearEmbedding(n_components=n_components, n_jobs=n_jobs)
+    # transformer = SpectralEmbedding(n_components=n_components, affinity='rbf', n_jobs=n_jobs)
+    emb1 = transformer.fit_transform(latents)
+    print('First Reduction Shape:', emb1.shape)
 
-    # Second Dimension Reduction
-    X_embedded = TSNE(n_components=2, **kwargs).fit_transform(kpca)
-    print('Second Reduction Shape:', X_embedded.shape)
-
-    return X_embedded
-
-def reduce_dim_lle(latents, **kwargs):
-    # First Dimension Reduction
-    transformer = LocallyLinearEmbedding(n_components=200, n_jobs=4)
-    lap = transformer.fit_transform(latents)
-    print('First Reduction Shape:', lap.shape)
-
-    # Second Dimension Reduction
-    X_embedded = TSNE(n_components=2, **kwargs).fit_transform(lap)
-    print('Second Reduction Shape:', X_embedded.shape)
-
-    return X_embedded
-
-
-def reduce_dim_laplacian(latents, **kwargs):
-    # First Dimension Reduction
-    transformer = SpectralEmbedding(n_components=200, affinity='rbf', n_jobs=4)
-    lap = transformer.fit_transform(latents)
-    print('First Reduction Shape:', lap.shape)
-
-    # Second Dimension Reduction
-    X_embedded = TSNE(n_components=2, **kwargs).fit_transform(lap)
+    # Second dimension reduction
+    # TODO: remove n_jobs on production
+    X_embedded = TSNE(n_components=2, n_jobs=16).fit_transform(emb1)
     print('Second Reduction Shape:', X_embedded.shape)
 
     return X_embedded
@@ -72,9 +50,9 @@ def inference(X, model, batch_size=256):
     dataloader = DataLoader(dataset, batch_size=batch_size, shuffle=False)
     latents = []
     for i, x in enumerate(dataloader):
-        x = torch.FloatTensor(x)
+        x = torch.FloatTensor(x).cuda()
         vec, img = model(x)
-        vec = vec.view(img.size()[0], -1).detach().numpy()
+        vec = vec.view(img.size()[0], -1).cpu().detach().numpy()
         if i == 0:
             latents = vec
         else:
