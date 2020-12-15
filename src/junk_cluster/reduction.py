@@ -23,7 +23,7 @@ from sklearn.manifold import TSNE, SpectralEmbedding, LocallyLinearEmbedding
 
 def reduce_dim(latents):
     # First dimension reduction
-    transformer = KernelPCA(n_components=128, n_jobs=16, kernel='rbf')
+    transformer = KernelPCA(n_components=512, n_jobs=16, kernel='rbf')
     # transformer = LocallyLinearEmbedding(n_components=n_components, n_jobs=n_jobs)
     # transformer = SpectralEmbedding(n_components=n_components, affinity='rbf', n_jobs=n_jobs)
     emb1 = transformer.fit_transform(latents)
