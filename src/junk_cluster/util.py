@@ -1,4 +1,6 @@
 import matplotlib.pyplot as plt
+import matplotlib
+import sys
 
 
 def plot_scatter(feat, label, savefig=None):
@@ -9,14 +11,17 @@ def plot_scatter(feat, label, savefig=None):
     Returns:
       None
     """
+    # do not try to show the image, since it cause failure when X11
+    # display is not available
+    matplotlib.use('Agg')
+
     X = feat[:, 0]
     Y = feat[:, 1]
-    plt.scatter(X, Y, c = label)
+    plt.scatter(X, Y, c=label)
     plt.legend(loc='best')
     if savefig is not None:
         plt.savefig(savefig)
-    plt.show()
-    return
+    # plt.show()
 
 
 """# Some useful functions

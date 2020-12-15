@@ -9,14 +9,20 @@
 
 import torch
 import numpy as np
-from sklearn.decomposition import KernelPCA
-from sklearn.manifold import TSNE
 from sklearn.cluster import MiniBatchKMeans
 from common import *
 
 
+def predict(X_embedded):
+    # Clustering
+    pred = MiniBatchKMeans(n_clusters=2, random_state=0).fit(X_embedded)
+    pred = [int(i) for i in pred.labels_]
+    pred = np.array(pred)
+    return pred
+
+
 def invert(pred):
-    return np.abs(1-pred)
+    return np.abs(1 - pred)
 
 
 def save_prediction(pred, out_csv='prediction.csv'):
@@ -28,18 +34,23 @@ def save_prediction(pred, out_csv='prediction.csv'):
 
 
 # load model
-device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
-# model = AE().to(device)
-# model.load_state_dict(torch.load(MODEL_PATH))
-model = torch.load(MODEL_PATH).to(device)
+model = torch.load(MODEL_PATH).cpu()
 model.eval()
 
 # 準備 data
 trainX = np.load('trainX.npy')
+trainY = np.load('trainY.npy')
 
 # 預測答案
 latents = inference(X=trainX, model=model)
-pred, X_embedded = predict(latents)
+X_embedded = reduce_dim_pca(latents, n_jobs=16)
+pred = predict(latents)
+
+# Problem c (作圖) 將 train data 的降維結果 (embedding) 與他們對應的 label 畫出來。
+acc_latent = cal_acc(trainY, pred)
+print('The clustering accuracy is:', acc_latent)
+print('The clustering result:')
+plot_scatter(X_embedded, trainY, savefig='clusters.png')
 
 # 將預測結果存檔，上傳 kaggle
 save_prediction(pred, 'prediction.csv')

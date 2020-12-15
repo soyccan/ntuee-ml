@@ -87,7 +87,9 @@ for epoch in range(n_epoch):
         img = data.to(device)
 
         output1, output = model(img)
-        loss = criterion(output, img)
+        l1reg = torch.mean(torch.tensor(
+                [torch.norm(param, 1) for param in model.parameters()]))
+        loss = criterion(output, img) + 1e-5 * l1reg
 
         optimizer.zero_grad()
         loss.backward()

@@ -13,10 +13,7 @@ import numpy as np
 from common import *
 
 # load model
-device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
-# model = AE().to(device)
-# model.load_state_dict(torch.load(MODEL_PATH))
-model = torch.load(MODEL_PATH).to(device)
+model = torch.load(MODEL_PATH).cpu()
 model.eval()
 
 # load data
@@ -25,10 +22,18 @@ trainX = np.load('trainX.npy')
 #     # write data as images
 #     Image.fromarray(trainX[i], 'RGB').save('input/{:02}.png'.format(i))
 trainX = preprocess(trainX)
+train_dataset = Image_Dataset(trainX)
+train_dataloader = DataLoader(train_dataset, batch_size=128, shuffle=False)
 
 # evaluate
-for i in range(100):
-    img = torch.tensor(trainX[i:i+1]).to(device)
+criterion = torch.nn.MSELoss()
+total_loss = []
+for i, img in enumerate(train_dataloader):
     vec, img1 = model(img)
-    img1 = postprocess(img1.cpu().detach().numpy())
+    total_loss.append(criterion(img1, img).item())
+print('Reconstruction Loss:', np.mean(total_loss))
+for i in range(100):
+    img = torch.tensor(trainX[i:i+1])
+    vec, img1 = model(img)
+    img1 = postprocess(img1.detach().numpy())
     Image.fromarray(img1[0], 'RGB').save('reconstruct/{}.png'.format(i))
