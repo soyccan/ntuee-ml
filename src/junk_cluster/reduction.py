@@ -19,20 +19,25 @@ def cal_acc(gt, pred):
 
 from sklearn.decomposition import KernelPCA
 from sklearn.manifold import TSNE, SpectralEmbedding, LocallyLinearEmbedding
-
+# from junk_cluster.fastTSNE import make_pipeline, AnnoyTransformer
 
 def reduce_dim(latents):
     # First dimension reduction
-    transformer = KernelPCA(n_components=512, n_jobs=16, kernel='rbf')
-    # transformer = LocallyLinearEmbedding(n_components=n_components, n_jobs=n_jobs)
-    # transformer = SpectralEmbedding(n_components=n_components, affinity='rbf', n_jobs=n_jobs)
-    emb1 = transformer.fit_transform(latents)
+    emb1 = KernelPCA(n_components=512, n_jobs=16, kernel='rbf').fit_transform(latents)
+    # emb1 = LocallyLinearEmbedding(n_components=n_components, n_jobs=n_jobs).fit_transform(latents)
+    # ebm1 = SpectralEmbedding(n_components=n_components, affinity='rbf', n_jobs=n_jobs).fit_transform(latents)
+    np.save('emb1.npy', emb1)
+    # emb1 = np.load('emb1.npy')
     print('First Reduction Shape:', emb1.shape)
 
     # Second dimension reduction
-    # TODO: remove n_jobs on production
-    X_embedded = TSNE(n_components=2, n_jobs=16).fit_transform(emb1)
+    # TODO: TNSE do not support n_jobs, remove it on production
+    X_embedded = TSNE(n_components=2,
+                      perplexity=50,
+                      n_jobs=16,
+                      verbose=2).fit_transform(emb1)
     print('Second Reduction Shape:', X_embedded.shape)
+    np.save('emb.npy', X_embedded)
 
     return X_embedded
 
