@@ -43,7 +43,7 @@ trainY = np.load('trainY.npy')
 
 # 預測答案
 latents = inference(X=trainX, model=model)
-X_embedded = reduce_dim_pca(latents, n_jobs=16)
+X_embedded = reduce_dim_pca(latents, n_jobs=16)  # TODO: remove n_jobs on production
 pred = predict(latents)
 
 # Problem c (作圖) 將 train data 的降維結果 (embedding) 與他們對應的 label 畫出來。
