@@ -1,7 +1,8 @@
 """ Common definitions """
 
 MODEL_PATH = './checkpoints/best.pth'
-# MODEL_PATH = '../model/0.82888.pth'
+# MODEL_PATH = '../model/0.77285-latent256.pth'
+# MODEL_PATH = '../model/0.80396.pth'
 
 import os
 os.environ["CUDA_VISIBLE_DEVICES"] = "0"

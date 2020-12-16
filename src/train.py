@@ -46,7 +46,7 @@ from junk_cluster.dataset import *
 
 trainX = np.load('trainX.npy')
 trainX = preprocess(trainX)
-trainX, validX = train_test_split(trainX, test_size=0.2)
+trainX, validX = train_test_split(trainX, test_size=0.1)
 train_dataset = Image_Dataset(trainX)
 valid_dataset = Image_Dataset(validX)
 
@@ -68,10 +68,10 @@ from junk_cluster.util import *
 same_seeds(0)
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
-model = AE().to(device)
+model = AE_plus().to(device)
 print(model)
 criterion = torch.nn.MSELoss()
-optimizer = torch.optim.Adam(model.parameters(), lr=1e-3, weight_decay=1e-9)
+optimizer = torch.optim.Adam(model.parameters(), lr=1e-3, weight_decay=1e-5)
 
 # 準備 dataloader, model, loss criterion 和 optimizer
 train_dataloader = DataLoader(train_dataset, batch_size=128, shuffle=True)

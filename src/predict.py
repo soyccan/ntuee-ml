@@ -36,8 +36,7 @@ def save_prediction(pred, out_csv='prediction.csv'):
 same_seeds(0)
 
 # load model
-model = torch.load('../model/0.80396.pth')  #, map_location='cpu')
-# model = torch.load(MODEL_PATH)
+model = torch.load(MODEL_PATH)  #, map_location='cpu')
 model.eval()
 
 # 準備 data
