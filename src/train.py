@@ -68,10 +68,10 @@ from junk_cluster.util import *
 same_seeds(0)
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
-model = AE_plus().to(device)
+model = AE().to(device)
 print(model)
 criterion = torch.nn.MSELoss()
-optimizer = torch.optim.Adam(model.parameters(), lr=1e-3, weight_decay=1e-5)
+optimizer = torch.optim.Adam(model.parameters(), lr=1e-3, weight_decay=1e-7)
 
 # 準備 dataloader, model, loss criterion 和 optimizer
 train_dataloader = DataLoader(train_dataset, batch_size=128, shuffle=True)

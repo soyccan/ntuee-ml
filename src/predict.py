@@ -9,6 +9,7 @@
 
 import torch
 import numpy as np
+import sys
 from sklearn.cluster import MiniBatchKMeans
 from common import *
 
@@ -40,8 +41,8 @@ model = torch.load(MODEL_PATH)  #, map_location='cpu')
 model.eval()
 
 # 準備 data
-trainX = np.load('trainX.npy')
-trainY = np.load('trainY.npy')
+trainX = np.load(sys.argv[1])
+# trainY = np.load('trainY.npy')
 
 # 預測答案
 latents = inference(X=trainX, model=model)
@@ -49,14 +50,14 @@ X_embedded = reduce_dim(latents)
 pred = predict(X_embedded)
 
 # Problem c (作圖) 將 train data 的降維結果 (embedding) 與他們對應的 label 畫出來。
-acc_latent = cal_acc(trainY, pred)
-print('The clustering accuracy is:', acc_latent)
-print('The clustering result:')
-plot_scatter(X_embedded, trainY, savefig='clusters.png')
+# acc_latent = cal_acc(trainY, pred)
+# print('The clustering accuracy is:', acc_latent)
+# print('The clustering result:')
+# plot_scatter(X_embedded, trainY, savefig='clusters.png')
 
 # 將預測結果存檔，上傳 kaggle
-save_prediction(pred, 'prediction.csv')
+# save_prediction(pred, 'prediction.csv')
 
 # 由於是 unsupervised 的二分類問題，我們只在乎有沒有成功將圖片分成兩群
 # 如果上面的檔案上傳 kaggle 後正確率不足 0.5，只要將 label 反過來就行了
-save_prediction(invert(pred), 'prediction_invert.csv')
+save_prediction(invert(pred), sys.argv[2])

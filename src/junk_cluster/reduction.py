@@ -22,23 +22,21 @@ from sklearn.manifold import TSNE, SpectralEmbedding, LocallyLinearEmbedding
 
 def reduce_dim(latents):
     # First dimension reduction
-    # emb1 = KernelPCA(n_components=512, n_jobs=16, kernel='rbf').fit_transform(latents)
-    # np.save('emb1.npy', emb1)
+    emb1 = KernelPCA(n_components=512, n_jobs=16, kernel='rbf').fit_transform(latents)
+    np.save('emb1.npy', emb1)
     # emb1 = np.load('emb1.npy')
-    emb1 = latents
     # print('First Reduction Shape:', emb1.shape)
 
     # Second dimension reduction
     # TODO: TNSE do not support n_jobs, remove it on production
-    # X_embedded = TSNE(n_components=2,
-    #                   perplexity=50,
-    #                   n_jobs=16,
-    #                   verbose=2).fit_transform(emb1)
+    X_embedded = TSNE(n_components=2,
+                      perplexity=50,
+                      verbose=2).fit_transform(emb1)
     # X_embedded = LocallyLinearEmbedding(n_components=2,
     #                                     n_jobs=16).fit_transform(latents)
-    X_embedded = SpectralEmbedding(n_components=2,
-                                   affinity='rbf',
-                                   n_jobs=16).fit_transform(latents)
+    # X_embedded = SpectralEmbedding(n_components=2,
+    #                                affinity='rbf',
+    #                                n_jobs=16).fit_transform(latents)
     print('Second Reduction Shape:', X_embedded.shape)
     np.save('emb.npy', X_embedded)
 
