@@ -7,9 +7,6 @@ from rnn.preprocess import *
 from rnn.test import *
 from w2v import *
 
-# set GPU to use
-os.environ["CUDA_VISIBLE_DEVICES"] = "0"
-
 # 通過 torch.cuda.is_available() 的回傳值進行判斷是否有使用 GPU 的環境，如果有的話 device 就設為 "cuda"，沒有的話就設為 "cpu"
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
