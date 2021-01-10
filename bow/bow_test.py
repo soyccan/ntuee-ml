@@ -14,7 +14,7 @@ def bag_of_words(corpus):
 
 def main():
     # set GPU to use
-    os.environ["CUDA_VISIBLE_DEVICES"] = "2"
+    os.environ["CUDA_VISIBLE_DEVICES"] = "0"
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
     print(device)
 
