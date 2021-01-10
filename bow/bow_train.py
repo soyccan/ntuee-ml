@@ -187,7 +187,7 @@ def sparse2tensor_float(X):
 
 def main():
     # set GPU to use
-    os.environ["CUDA_VISIBLE_DEVICES"] = "2"
+    os.environ["CUDA_VISIBLE_DEVICES"] = "0"
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
     print(device)
 
