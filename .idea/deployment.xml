@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="PublishConfigData" autoUpload="Always" serverName="meow2" remoteFilesAllowedToDisappearOnAutoupload="false">
+    <serverData>
+      <paths name="meow2">
+        <serverdata>
+          <mappings>
+            <mapping deploy="/nfs/undergrad/07/b07902143/ml/final-proj" local="$PROJECT_DIR$" />
+          </mappings>
+        </serverdata>
+      </paths>
+    </serverData>
+    <option name="myAutoUpload" value="ALWAYS" />
+  </component>
+</project>
