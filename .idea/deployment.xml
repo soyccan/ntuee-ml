@@ -5,7 +5,7 @@
       <paths name="meow2">
         <serverdata>
           <mappings>
-            <mapping deploy="/nfs/undergrad/07/b07902143/ml/final-proj" local="$PROJECT_DIR$" />
+            <mapping local="$PROJECT_DIR$" web="/" />
           </mappings>
         </serverdata>
       </paths>
