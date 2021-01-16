@@ -2,7 +2,7 @@
 
 severstal_final_test_preds_0111_3.csv is our best submission
 
-notebooks/ contains our training and testing code, and should be run
+src/*.ipynb are our training and testing code, and should be run
 on Codelab
 
 Dataset should be put on Google Drive in:
