@@ -1,7 +1,8 @@
 # Machine Learning, 2020 Fall, NTU EE
 
 This repository stores the work for project and assignments of the course
-Machine Learning (EE5184), instructed by Pr. Pei-Yuan Wu (吳沛遠)
+Machine Learning (EE5184), instructed by Pr. Pei-Yuan Wu (吳沛遠), 
+2020 Fall, Department of Electrical Engineering, National Taiwan University
 
 ## HW1
 Task: [PM2.5 Prediction](https://www.kaggle.com/c/ml2020fall-hw1)
