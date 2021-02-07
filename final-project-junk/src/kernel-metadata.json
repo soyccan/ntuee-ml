@@ -1,0 +1,17 @@
+{
+  "id": "b07902143/notebook20ab0a00c0",
+  "id_no": 13695314,
+  "title": "notebook20ab0a00c0",
+  "code_file": "notebook20ab0a00c0.ipynb",
+  "language": "python",
+  "kernel_type": "notebook",
+  "is_private": true,
+  "enable_gpu": true,
+  "enable_internet": false,
+  "keywords": [],
+  "dataset_sources": [],
+  "kernel_sources": [],
+  "competition_sources": [
+    "severstal-steel-defect-detection"
+  ]
+}
